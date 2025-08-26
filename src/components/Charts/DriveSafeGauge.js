@@ -26,7 +26,11 @@ const DriveSafeGauge = ({ rank, lastYearRank }) => {
   const needleY = cy - r * Math.sin(Math.PI - angle * RADIAN);
 
   return (
-    <div className="flex flex-col items-center   ">
+    <>
+        <div>
+                 
+ <div className="flex flex-col items-center   ">
+   <h5 className="font-semibold text-gray-800 text-start mb-0">Drive Safe Rating</h5>
       <ResponsiveContainer width={320} height={200}>
         <PieChart>
           <Pie
@@ -76,6 +80,9 @@ const DriveSafeGauge = ({ rank, lastYearRank }) => {
         <span className="text-blue-600 font-medium">{lastYearRank}</span>
       </p>
     </div>
+        </div>
+    </>
+   
   );
 };
 
