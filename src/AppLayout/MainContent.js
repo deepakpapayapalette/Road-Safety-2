@@ -15,6 +15,8 @@ import DriverHealthTable from '../components/AgeGroupSegregation/DriverHealthTab
 import DriverHealthTable2 from '../components/AgeGroupSegregation/DriverHealthTable2'
 import DriveRatingQuickAction from '../components/DriveRatingQuickActions/DriveRatingQuickAction'
 import Overview from '../components/Overview/Overview'
+// import DonutChart4 from '../components/Charts/DonutChart4'
+// import DriveSafeGauge from '../components/Charts/DriveSafeGauge'
 
 // import Page2 from '../pages/Page2'
 
@@ -39,7 +41,7 @@ const MainContent = () => {
         <AgeGroupSegregation/>
         <DriverHealthTable/>
         <DriverHealthTable2/>
- 
+       
       </main>
     </>
   )
