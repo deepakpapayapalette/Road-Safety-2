@@ -1,19 +1,47 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// import Home from "./pages/Home";
-import DashboardLayout from "./AppLayout/DashboardLayout";
-// import Page2 from './pages/Page2'
+import './App.css'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+
+
+
+import Home from './pages/Home';
+import AssetMasterForm from './pages/AssetMaster/AssetMaster';
+import StationMaster from './pages/StationMaster/StationMaster';
+import TopbarHeader from './components/Topbar/Topbar';
+import DashboardLayout from './AppLayout/DashboardLayout';
+import MainLayout from './Layout/MainLayout';
+import Errorpage from './Layout/ErrorPage';
+
+
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<DashboardLayout />} />
-        {/* <Route path="/page2" element={<Page2 />} /> */}
-      </Routes>
-    </BrowserRouter>
-  );
+  const myRouter = createBrowserRouter([
+    {
+      path: '/',
+      element: <MainLayout />,
+      errorElement: <Errorpage />,
+      children: [
+        {
+          path: '/',
+          element: <Home />
+        },
+        {
+          path: 'station-master',
+          element: <StationMaster />
+        },
+        {
+          path: 'asset-master',
+          element: <AssetMasterForm />
+        },
+        {
+          path: '*',
+          element: <Errorpage />
+        }
+      ]
+    }
+  ]);
+  
+  return <RouterProvider router={myRouter} />
 }
 
-export default App;
+export default App

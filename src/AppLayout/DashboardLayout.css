@@ -14,11 +14,13 @@
 }
 
 .sidebar.closed {
-  width: 60px;
+  /* width: 60px; */
 }
-
+.css-142b0ks{
+  /* margin-left: 0!important; */
+}
 .sidebar.open {
-  width: 240px;
+  /* width: 240px; */
 }
 
 /* Target MUI Drawer paper specifically */
@@ -108,3 +110,8 @@
   background-color: transparent !important;
 }
 
+
+.app-sidebar .active{
+
+    background-color: #07000024;
+}
