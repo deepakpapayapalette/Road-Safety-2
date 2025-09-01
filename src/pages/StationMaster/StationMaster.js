@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import { __getApiData, __postApiData } from "../../utils/api";
 import { __getCommenApiDataList } from "../../utils/api/commonApi";
-
 import { toast } from "react-toastify"
+import { __formatDate } from "../../utils/function";
+
+
 import {
   TextField,
   MenuItem,
@@ -16,11 +18,12 @@ import {
   CircularProgress,
   Menu
 } from "@mui/material";
-import { __formatDate } from "../../utils/function";
+
 
 import { HiDotsVertical } from "react-icons/hi";
 
 import { MdDeleteForever } from "react-icons/md";
+import LoadingScreen from "../../components/Loading/LoadingScreen";
 export default function StationMaster() {
 
 
@@ -78,10 +81,10 @@ export default function StationMaster() {
 
   const __handleSave = (e) => {
     e.preventDefault()
-    if (!StationName.trim()) {
-      updateState({ error: "Station Name is required" });
-      return;
-    }
+    // if (!StationName.trim()) {
+    //   updateState({ error: "Station Name is required" });
+    //   return;
+    // }
     // if (!AddressLine1.trim()) {
     //   updateState({ error: "Address Line 1 is required" });
     //   return;
@@ -109,7 +112,6 @@ export default function StationMaster() {
       ...(CityId ? { CityId } : { CityId: null }),
       GeoLocation: state.GeoLocation,
       IsActive,
-      // ...(CreatedOn ? { CreatedOn } : { CreatedOn: null }),
     }
 
     updateState({ isLoading: true })
@@ -273,12 +275,13 @@ export default function StationMaster() {
     setAnchorEl(null);
   };
 
+  // console.log(StationType,"StationType");
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Station Master</h1>
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
           <Button
             variant="outlined"
             onClick={resetForm}
@@ -286,7 +289,7 @@ export default function StationMaster() {
           >
             New Station
           </Button>
-        </div>
+        </div> */}
       </div>
 
       {error && (
@@ -313,7 +316,7 @@ export default function StationMaster() {
                 }}
                 labelId="station-type-label"
                 name="ParentStationId"
-                value={ParentStationId}
+                value={ParentStationId || "" }
                 onChange={handleChange}
                 label="ParentStationId"
                 required
@@ -327,10 +330,7 @@ export default function StationMaster() {
                   </MenuItem>
                 ))}
               </Select>
-            </FormControl>
-
-
-
+            </FormControl> 
 
             <FormControl fullWidth>
               <InputLabel id="station-type-label">Station Type *</InputLabel>
@@ -502,23 +502,32 @@ export default function StationMaster() {
             <table className="min-w-full text-sm border-collapse">
               <thead>
                 <tr className=" text-white text-left rounded-t-2xl" >
-                  <th className="px-1 text-center ps-3 py-2 text-[12px] bg-indigo-600" style={{ borderRadius: '7px 0 0 0' }}>Parent Station</th>
-                  <th className="px-1 text-center py-2 text-[12px] bg-indigo-600">Station Type</th>
-                  <th className="px-1 text-center py-2 text-[12px] bg-indigo-600">Station Name</th>
-                  <th className="px-1 text-center py-2 text-[12px] bg-indigo-600">Address Line 1</th>
-                  <th className="px-1 text-center py-2 text-[12px] bg-indigo-600">Address Line 2</th>
-                  <th className="px-1 text-center py-2 text-[12px] bg-indigo-600">Postal Code</th>
-                  <th className="px-1 text-center py-2 text-[12px] bg-indigo-600">City</th>
-                  <th className="px-1 text-center py-2 text-[12px] bg-indigo-600">GeoLocation</th>
-                  <th className="px-1 text-center py-2 text-[12px] bg-indigo-600 ">Created At</th>
-                  <th className="px-1 text-center py-2 text-[12px] bg-indigo-600 " >Updated At</th>
-                  <th className="px-1 text-center py-2 text-[12px] bg-indigo-600 " style={{ borderRadius: '0 7px  0 0' }}>Actions</th>
+                  <th className="px-1 text-center ps-3 py-2 text-[12px] bg-[#525fe1]" style={{ borderRadius: '7px 0 0 0' }}>Parent Station</th>
+                  <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Station Type</th>
+                  <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Station Name</th>
+                  <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Address Line 1</th>
+                  <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Address Line 2</th>
+                  <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Postal Code</th>
+                  <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">City</th>
+                  <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">GeoLocation</th>
+                  <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1] ">Created At</th>
+                  <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1] " >Updated At</th>
+                  <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1] " style={{ borderRadius: '0 7px  0 0' }}>Actions</th>
                 </tr>
               </thead> 
-              <tbody>
-                {stationList.map((item, index) => (
-                  <tr key={item._id} className={`${index % 2 === 0 ? "bg-[#eeeffc]" : "bg-white"
-                    } hover:bg-gray-100 transition`}>
+              <tbody> 
+                  {isLoading ? ( 
+                       <table width={"100%"} height={"100%"}>
+                        <tr>
+                          <td>
+                            <LoadingScreen />
+                          </td>
+                        </tr>
+                       </table> 
+                    ) : (
+                  stationList.map((item, index) => (
+                  <tr key={item._id} className={`${index % 2 === 0 ? " bg-white" : "bg-[#f2f3fc]"
+                    } hover:bg-gray-100 transition`}> 
                     <td className="px-2 py-2 text-[12px] text-center"> {item.ParentStationId?.StationName || ""} </td>
                     <td className="px-2 py-2 text-[12px]"> {item?.StationTypeId?.lookup_value} </td>
                     <td className="px-2 py-2 text-[12px]"> {item.StationName} </td>
@@ -558,13 +567,16 @@ export default function StationMaster() {
                     </span>}
                     </td>
                   </tr>
-                ))}
+
+                ))
+                 )} 
+               
               </tbody>
             </table>
+                 
            
           </div>
-        </div>
-
+        </div> 
       </div>
     </div>
   );
