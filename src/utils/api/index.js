@@ -4,16 +4,9 @@ import { __apiFormHeader, __apiHeader, __authToken } from "./constantfun"
 const __LIVE = process.env.REACT_APP_LIVE
 const __LOCAL = process.env.REACT_APP_LOCAL
 
-// export const BASE_URL = __LIVE || __LOCAL
-export const BASE_URL = "http://localhost:3001"
-// export const BASE_URL = "https://devapi.bizaario.in"
-// export const BASE_URL = "http://192.168.16.176:3001"
-// export const BASE_URL = "https://7ed5-103-117-13-137.ngrok-free.app"
 
-// export const BASE_URL = __LIVE
+export const BASE_URL = "https://roadsafety-backend.onrender.com"
 
-// export const __HOST = () =>
-//   process.env.NODE_ENV === "development" ? __LOCAL : __LIVE
 
 const __getApiData = endpoint => {
   console.log(endpoint, "endpoint")
@@ -29,7 +22,7 @@ const __getApiData = endpoint => {
 }
 
 const __postApiData = (endpoint, data, type) => {
-  console.log(endpoint, "endpoint", data, "payload", type, "type")
+  // console.log(endpoint, "endpoint", data, "payload", type, "type")
   return axios
     .post(
       `${BASE_URL}${endpoint}`,

@@ -22,8 +22,7 @@ const Sidebar = ({ open }) => {
             {open && <Typography variant="body1"><span  className='text-white '>Station Master</span></Typography>}
           </NavLink>
 
-           {/* <NavLink to="/asset-master" > */}
-            <NavLink  to="/asset-master"className={`sidebar-item no-underline ${!open ? 'collapsed' : ''}`}> 
+          <NavLink to="/asset-master" className={`sidebar-item no-underline ${!open ? 'collapsed' : ''}`}> 
                 <Box className="sidebar-icon"><span className="text-lg"><img src={img1} alt="" /></span>
                 </Box>
                   {open && <Typography variant="body1"><span className='text-white no-underline'> Asset Master</span></Typography>}

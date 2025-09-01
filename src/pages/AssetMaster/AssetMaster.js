@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { TextField, MenuItem, Radio, RadioGroup, FormControlLabel } from "@mui/material";
+import { TextField, MenuItem, Radio, RadioGroup, FormControlLabel, CircularProgress } from "@mui/material";
+import { stationDataList } from "../../Data/LocalData";
+import { Button } from "bootstrap";
 
 export default function AssetMasterForm() {
   const [formData, setFormData] = useState({
@@ -25,12 +27,16 @@ export default function AssetMasterForm() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 rid-cols-1 gap-6 w-full  mx-auto ">
+      <div className="space-y-6">
+                <h1 className="text-2xl font-bold text-gray-800">Assets Master</h1>
+      <div className="flex justify-between items-center">
+
+    <div className="grid grid-cols-12 gap-6 w-full mx-auto ">
       
       {/* Left Form */}
-      <div className="bg-white p-3  rounded-xl shadow-md space-y-4">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Asset Master Form</h2>
-
+      <div className="bg-white py-3 px-3 rounded-xl shadow-md  col-span-5">
+        {/* <h2 className="text-lg font-semibold text-gray-800 mb-4">Asset Master Form</h2> */}
+      <form  className="space-y-5">
         <TextField
         sx={{ display: 'none' }}
           label="Asset ID"
@@ -162,25 +168,67 @@ export default function AssetMasterForm() {
             shrink: true,
           }}
         />
+            {/* <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ mt: 2 }} 
+            >
+ 
+            </Button> */}
+            <div className="flex justify-end space-x-3 mt-2">
+              <button
+                type="button"
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+              >
+                Save 
+              </button>
+              </div>
+        </form>
       </div>
 
       {/* Right Preview */}
-      <div className="bg-white  rounded-xl shadow-md p-3">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Preview</h2>
-        <div className="space-y-5 text-sm">
-          {/* <p><span className="text-gray-500">Asset ID:</span> <span className="text-gray-900">{formData.assetId || "-"}</span></p> */}
-          <p><span className="text-gray-500">Asset Type ID:</span> <span className="text-gray-900">{formData.assetTypeId || "-"}</span></p>
-          <p><span className="text-gray-500">Parent Asset ID:</span> <span className="text-gray-900">{formData.parentAssetId || "-"}</span></p>
-          <p><span className="text-gray-500">Name:</span> <span className="text-gray-900">{formData.name || "-"}</span></p>
-          <p><span className="text-gray-500">Designation:</span> <span className="text-gray-900">{formData.designation || "-"}</span></p>
-          <p><span className="text-gray-500">Date of Birth:</span> <span className="text-gray-900">{formData.dob || "-"}</span></p>
-          <p><span className="text-gray-500">Gender:</span> <span className="text-gray-900">{formData.gender || "-"}</span></p>
-          <p><span className="text-gray-500">Phone:</span> <span className="text-gray-900">{formData.phone || "-"}</span></p>
-          <p><span className="text-gray-500">Email:</span> <span className="text-gray-900">{formData.email || "-"}</span></p>
-          <p><span className="text-gray-500">Password:</span> <span className="text-gray-900">{formData.password ? "********" : "-"}</span></p>
-          <p><span className="text-gray-500">Created On:</span> <span className="text-gray-900">{formData.createdOn || "-"}</span></p>
-        </div>
-      </div>
+            <div className="bg-white py-2 rounded-lg  col-span-7">
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full text-sm border-collapse">
+                        <thead>
+                          <tr className=" text-white text-left rounded-t-2xl" >
+                            <th className="px-1 text-center ps-3 py-2 text-[12px] bg-indigo-600" style={{ borderRadius: '7px 0 0 0' }}>Parent Asset ID</th>
+                            <th className="px-1 text-center py-2 text-[12px] bg-indigo-600">Name</th>
+                            <th className="px-1 text-center py-2 text-[12px] bg-indigo-600">Designation</th>
+                            <th className="px-1 text-center py-2 text-[12px] bg-indigo-600">Date of Birth</th>
+                            <th className="px-1 text-center py-2 text-[12px] bg-indigo-600">Gender</th>
+                            <th className="px-1 text-center py-2 text-[12px] bg-indigo-600">Phone Number</th>
+                            <th className="px-1 text-center py-2 text-[12px] bg-indigo-600">Email Address</th>
+                            <th className="px-1 text-center py-2 text-[12px] bg-indigo-600">Password</th>
+                            <th className="px-1 text-center py-2 text-[12px] bg-indigo-600 " style={{ borderRadius: '0 7px  0 0' }}>Created On</th>
+                          </tr>
+                        </thead>
+          
+                        <tbody>
+                          {stationDataList.map((item, index) => (
+                            <tr key={item.id} className={`${index % 2 === 0 ? "bg-[#eeeffc]" : "bg-white"
+                              } hover:bg-gray-100 transition`}>
+                              <td className="px-2 py-2 text-[12px] text-center"> {item.ParentStationID} </td>
+                              <td className="px-2 py-2 text-[12px]"> {item.StationType} </td>
+                              <td className="px-2 py-2 text-[12px]"> {item.StationName} </td>
+                              <td className="px-2 py-2 text-[12px]"> {item.AddressLine1} </td>
+                              <td className="px-2 py-2 text-[12px]"> {item.AddressLine2} </td>
+                              <td className="px-2 py-2 text-[12px]"> {item.PostalCode} </td>
+                              <td className="px-2 py-2 text-[12px]"> {item.City} </td>
+                              <td className="px-2 py-2 text-[12px]"> {item.Coordinates} </td>
+                              <td className="px-2 py-2 text-[12px]"> {item.CreatedOn} </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
     </div>
+
+    </div>
+    </div>
+
   );
 }
