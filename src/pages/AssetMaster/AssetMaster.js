@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import { __postApiData } from "../../utils/api";
 import { __getCommenApiDataList } from "../../utils/api/commonApi";
-import { toast } from "react-toastify"
+import { toast } from "react-toastify";
+import { __formatDate } from "../../utils/function";
 
 import {
   TextField,
@@ -36,27 +37,24 @@ export default function AssetMasterForm() {
     Manufacturer: "",
     Year: "",
     Color: "",
-    FuelTypeId: "",
+    FuelTypeId: "", 
+    ParentAssetId: '', 
     FuelType: [],
     DepartmentType: [],
-    parentAssetsType: [],
-    ParentAssetId: '',
-
-    IndividualDataArr: [],
-    assetList: [],
-    vehicleList: [],
+    parentAssetsType: [], 
+    IndividualAsset: [],
+    VehicleAssets: [],
     error: "",
     success: "",
     isLoading: false,
+  
   });
 
   const {
+   
     AssetSection,
     ParentAssetId,
-    AssetTypeId,
-    error,
-    success,
-    isLoading,
+    AssetTypeId, 
     parentAssetsType,
     AssetType,
     assetName,
@@ -79,11 +77,15 @@ export default function AssetMasterForm() {
     FuelTypeId,
     FuelType,
     DepartmentType,
-    assetList,
-    vehicleList
+    IndividualAsset,
+    VehicleAssets,
+    error,
+    success,
+    isLoading,
   } = state;
 
-  // console.log(state, "state")
+
+  console.log(IndividualAsset, "IndividualAsset")
 
   const updateState = (data) => setstate((prevState) => ({ ...prevState, ...data }));
   // =================RESET=FORM==========================================
@@ -113,6 +115,8 @@ export default function AssetMasterForm() {
       error: "",
       success: "",
       IsActive: true,
+      IndividualAsset: [],
+      VehicleAssets: [],
     });
   };
   // ================END=RESET=FORM==========================================
@@ -144,32 +148,31 @@ export default function AssetMasterForm() {
       updateState({ [stateKey]: [], isLoading: false });
     }
   };
-
-
-
-
-
-
-
+ 
   const fetchIndividual = () => {
     updateState({ isLoading: true });
-    __postApiData("/api/v1/admin/SaveIndividualAsset", {})
-      .then((res) => {
-        console.log("  SaveIndividualAsset:", res);
-
-        // updateState({ isLoading: false }); 
-
-        // if (res.response && res.response.response_code === "200") {
-        //   updateState({
-        //     IndividualDataArr: res.data.list || [],
-        //     isLoading: false,
-        //   });
-        // } else {
-        //   const errorMsg =
-        //     res.response?.message || res.message || "Failed to fetch stations";
-        //   updateState({ error: errorMsg, isLoading: false });
-        //   toast.error(errorMsg);
-        // }
+    __postApiData("/api/v1/admin/AssetList", {
+  "page": 1,
+  "limit": 20,
+//   "search": "station"
+  AssetTypeId: "68b5429c7c888e09e7af1cc5",
+//   "ParentAssetId": "68b58ddd5e8d7056b97d34d7",
+})
+   .then((res) => { 
+        updateState({ isLoading: false });  
+        if (res.response && res.response.response_code === "200") {
+          console.log(res.data.list, "res.data.list");
+          updateState({
+            IndividualAsset: res.data.list || [], 
+            // VehicleAssets: res.data.list || [],
+            isLoading: false,
+          });
+        } else {
+          const errorMsg =
+            res.response?.message || res.message || "Failed to fetch stations";
+          updateState({ error: errorMsg, isLoading: false });
+          toast.error(errorMsg);
+        }
 
       })
     // .catch((error) => {
@@ -185,9 +188,7 @@ export default function AssetMasterForm() {
   };
 
 
-  useEffect(() => {
-
-
+  useEffect(() => { 
     fetchData(["fuel_type"], "FuelType");
     fetchData(["asset_type"], "AssetType");
     fetchData(["department_type"], "DepartmentType");
@@ -655,7 +656,9 @@ export default function AssetMasterForm() {
                         <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Blood Group</th>
                         <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Reporting Asset</th>
                         <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Designation</th>
-                        <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1] " style={{ borderRadius: '0 7px  0 0' }}>Department</th>
+                        <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1] " >Department</th>
+                         <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Created At</th>
+                          <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]" style={{ borderRadius: '0 7px  0 0' }}>Updated At</th>
                       </>
                     ) : (
                       <>
@@ -672,29 +675,28 @@ export default function AssetMasterForm() {
                       </>
                     )}
                   </tr>
-                </thead>
-
-                <tbody>
-
-
-
+                </thead> 
+                <tbody> 
                   {AssetSection === "Individual" ? (
-                    assetList?.map((el) => (
-                      <tr key={el.id} className="border-b hover:bg-gray-100">
-                        <td className="px-1 text-center py-2">{el.parentAssetId || ''}</td>
-                        <td className="px-1 text-center py-2">{el.name || ''}</td>
-                        <td className="px-1 text-center py-2">{el.gender || ''}</td>
+                    IndividualAsset?.map((el) => (
+                      <tr key={el._id} className="border-b hover:bg-gray-100">
+                        <td className="px-1 text-center py-2">{el.AssetTypeId._id || ''}</td>
+                       {/* <td className="px-1 text-center py-2">{el.AssetTypeId._id || ''}</td> */}
+                         <td className="px-1 text-center py-2">{el.AssetName || ''}</td>
+                      <td className="px-1 text-center py-2">{el.Gender || ''}</td>
                         <td className="px-1 text-center py-2">{el.designation || ''}</td>
-                        <td className="px-1 text-center py-2">{el.DOB || ''}</td>
-                        <td className="px-1 text-center py-2">{el.DateOfJoining || ''}</td>
+                        <td className="px-1 text-center py-2">{__formatDate(el.DOB) || ''}</td>
+                        <td className="px-1 text-center py-2">{__formatDate(el.DateOfJoining) || ''}</td>
                         <td className="px-1 text-center py-2">{el.BloodGroup || ''}</td>
-                        <td className="px-1 text-center py-2">{el.ReportingAssetID || ''}</td>
+                          <td className="px-1 text-center py-2">{el.ReportingAssetID || ''}</td>
                         <td className="px-1 text-center py-2">{el.DesignationTypeId || ''}</td>
-                        <td className="px-1 text-center py-2">{el.DepartmentTypeId || ''}</td>
+                            <td className="px-1 text-center py-2">{el.DepartmentTypeId?.lookup_value || ''}</td>
+                        <td className="px-1 text-center py-2">{__formatDate(el.createdAt )|| ''}</td>
+                        <td className="px-1 text-center py-2">{__formatDate(el.updatedAt) || ''}</td> 
                       </tr>
                     ))
                   ) : (
-                    vehicleList?.map((el) => (
+                    VehicleAssets?.map((el) => (
                       <tr key={el.id} className="border-b hover:bg-gray-100">
                         <td className="px-1 text-center py-2">{el.parentAssetId || ''}</td>
                         <td className="px-1 text-center py-2">{el.RegistrationNumber || ''}</td>
