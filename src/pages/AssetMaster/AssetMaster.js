@@ -4,6 +4,7 @@ import { __postApiData } from "../../utils/api";
 import { __getCommenApiDataList } from "../../utils/api/commonApi";
 import { toast } from "react-toastify";
 import { __formatDate } from "../../utils/function";
+import LoadingScreen from "../../components/Loading/LoadingScreen";
 
 import {
   TextField,
@@ -85,7 +86,7 @@ export default function AssetMasterForm() {
   } = state;
 
 
-  console.log(IndividualAsset, "IndividualAsset")
+  console.log(IndividualAsset, "IndividualAssetx")
 
   const updateState = (data) => setstate((prevState) => ({ ...prevState, ...data }));
   // =================RESET=FORM==========================================
@@ -152,12 +153,12 @@ export default function AssetMasterForm() {
   const fetchIndividual = () => {
     updateState({ isLoading: true });
     __postApiData("/api/v1/admin/AssetList", {
-  "page": 1,
-  "limit": 20,
-//   "search": "station"
-  AssetTypeId: "68b5429c7c888e09e7af1cc5",
-//   "ParentAssetId": "68b58ddd5e8d7056b97d34d7",
-})
+      "page": 1,
+      "limit": 20,
+      // "search": ""
+      // AssetTypeId: "",
+      //"ParentAssetId": "",
+    })
    .then((res) => { 
         updateState({ isLoading: false });  
         if (res.response && res.response.response_code === "200") {
@@ -172,18 +173,17 @@ export default function AssetMasterForm() {
             res.response?.message || res.message || "Failed to fetch stations";
           updateState({ error: errorMsg, isLoading: false });
           toast.error(errorMsg);
-        }
-
+        } 
       })
-    // .catch((error) => {
-    //   console.error("Error fetching stations:", error);
-    //   const errorMsg =
-    //     error.response?.data?.message ||
-    //     error.message ||
-    //     "An error occurred while fetching stations";
-    //   updateState({ error: errorMsg, isLoading: false });
-    //   toast.error(errorMsg);
-    // });
+    .catch((error) => {
+      console.error("Error fetching stations:", error);
+      const errorMsg =
+        error.response?.data?.message ||
+        error.message ||
+        "An error occurred while fetching stations";
+      updateState({ error: errorMsg, isLoading: false });
+      toast.error(errorMsg);
+    });
 
   };
 
@@ -221,9 +221,7 @@ export default function AssetMasterForm() {
       DesignationTypeId: DesignationTypeId || null,
       DepartmentTypeId: DepartmentTypeId || null
     };
-
-    // console.log("Individual API payload:", payload);
-
+    updateState({ isLoading: true });
     __postApiData('/api/v1/admin/SaveIndividualAsset', payload)
       .then((res) => {
         // console.log(res, "SaveIndividualAsset")
@@ -254,7 +252,7 @@ export default function AssetMasterForm() {
         toast.error(errorMsg);
       });
   };
-
+  // =================handle=Vehicle=API=fn=========================
   const handleVehicleAPI = () => {
     const payload = {
       ...(AssetTypeId ? { AssetTypeId } : { AssetTypeId: "" }),
@@ -269,10 +267,7 @@ export default function AssetMasterForm() {
       Year: Year,
       Color: Color,
       FuelTypeId: FuelTypeId
-    };
-
-
-
+    }; 
     __postApiData('/api/v1/admin/SaveVehicleAsset', payload)
       .then((res) => {
         console.log(res, "SaveVehicleAsset");
@@ -323,7 +318,7 @@ export default function AssetMasterForm() {
       <div className="flex justify-between items-center">
 
         <div className="grid  grid-cols-12 gap-6 w-full mx-auto">
-          <div className="bg-white py-3 px-3 rounded-xl shadow-md  col-span-5">
+          <div className="bg-white py-3 px-3 rounded-xl border  col-span-5">
             <form
               onSubmit={__handleSave}
               className="bg-white  rounded-2xl p-2 w-full max-w-2xl space-y-4"
@@ -344,7 +339,7 @@ export default function AssetMasterForm() {
                   <MenuItem value="">
                     <em>Select Parent Assets id</em>
                   </MenuItem>
-                  {parentAssetsType?.map((el) => (
+                  {AssetType?.map((el) => (
                     <MenuItem
                       key={el._id} value={el._id}
                     >
@@ -354,7 +349,7 @@ export default function AssetMasterForm() {
                 </Select>
               </FormControl>
 
-              <FormControl fullWidth>
+              {/* <FormControl fullWidth>
                 <InputLabel id="assets-type-id">Asset ID</InputLabel>
                 <Select
                   MenuProps={{
@@ -373,7 +368,7 @@ export default function AssetMasterForm() {
                     </MenuItem>
                   ))}
                 </Select>
-              </FormControl>
+              </FormControl> */}
 
               {/* Asset Type Selection */}
               <FormControl fullWidth>
@@ -640,7 +635,7 @@ export default function AssetMasterForm() {
             </form>
           </div>
 
-          <div className="bg-white py-2 rounded-lg  col-span-7">
+          <div className="bg-white pb-2 rounded-lg  col-span-7 border">
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm border-collapse">
                 <thead>
@@ -651,14 +646,14 @@ export default function AssetMasterForm() {
                         <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Asset Name</th>
                         <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Gender</th>
                         <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Designation</th>
-                        <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Date of Birth</th>
-                        <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Date of Joining</th>
+                        <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Date_of_Birth</th>
+                        <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Date_of_Joining</th>
                         <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Blood Group</th>
                         <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Reporting Asset</th>
                         <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Designation</th>
-                        <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1] " >Department</th>
-                         <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Created At</th>
-                          <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]" style={{ borderRadius: '0 7px  0 0' }}>Updated At</th>
+                        <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]" >Department</th>
+                         <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]">Created_At </th>
+                          <th className="px-1 text-center py-2 text-[12px] bg-[#525fe1]" style={{ borderRadius: '0 7px  0 0' }}>Updated_At</th>
                       </>
                     ) : (
                       <>
@@ -677,28 +672,42 @@ export default function AssetMasterForm() {
                   </tr>
                 </thead> 
                 <tbody> 
+
                   {AssetSection === "Individual" ? (
-                    IndividualAsset?.map((el) => (
-                      <tr key={el._id} className="border-b hover:bg-gray-100">
-                        <td className="px-1 text-center py-2">{el.AssetTypeId._id || ''}</td>
-                       {/* <td className="px-1 text-center py-2">{el.AssetTypeId._id || ''}</td> */}
-                         <td className="px-1 text-center py-2">{el.AssetName || ''}</td>
-                      <td className="px-1 text-center py-2">{el.Gender || ''}</td>
-                        <td className="px-1 text-center py-2">{el.designation || ''}</td>
-                        <td className="px-1 text-center py-2">{__formatDate(el.DOB) || ''}</td>
-                        <td className="px-1 text-center py-2">{__formatDate(el.DateOfJoining) || ''}</td>
-                        <td className="px-1 text-center py-2">{el.BloodGroup || ''}</td>
+                    isLoading ? (
+                      <table width={"100%"} height={"100%"}>
+                        <tr>
+                          <td>
+                            <LoadingScreen />
+                          </td>
+                        </tr>
+                      </table>
+                    ) : (
+                      IndividualAsset?.map((el, index) => (
+                        <tr key={el._id} className={`${index % 2 === 0 ? " bg-white" : "bg-[#f2f3fc]"
+                          } hover:bg-gray-100 transition`}>
+                          <td className="px-1 text-center py-2 ps-2">{el.AssetTypeId.lookup_value || ''}</td>
+                          {/* <td className="px-1 text-center py-2">{el.AssetTypeId._id || ''}</td> */}
+                          <td className="px-1 text-center py-2">{el.AssetName || ''}</td>
+                          <td className="px-1 text-center py-2">{el.Gender || ''}</td>
+                          <td className="px-1 text-center py-2">{el.designation || ''}</td>
+                          <td className="px-1 text-center py-2">{__formatDate(el.DOB) || ''}</td>
+                          <td className="px-1 text-center py-2">{__formatDate(el.DateOfJoining) || ''}</td>
+                          <td className="px-1 text-center py-2">{el.BloodGroup || ''}</td>
                           <td className="px-1 text-center py-2">{el.ReportingAssetID || ''}</td>
-                        <td className="px-1 text-center py-2">{el.DesignationTypeId || ''}</td>
-                            <td className="px-1 text-center py-2">{el.DepartmentTypeId?.lookup_value || ''}</td>
-                        <td className="px-1 text-center py-2">{__formatDate(el.createdAt )|| ''}</td>
-                        <td className="px-1 text-center py-2">{__formatDate(el.updatedAt) || ''}</td> 
-                      </tr>
-                    ))
+                          <td className="px-1 text-center py-2">{el.DesignationTypeId || ''}</td>
+                          <td className="px-1 text-center py-2">{el.DepartmentTypeId?.lookup_value || ''}</td>
+                          <td className="px-1 text-center py-2">{__formatDate(el.createdAt) || ''}</td>
+                          <td className="px-1 text-center py-2">{__formatDate(el.updatedAt) || ''}</td>
+                        </tr>
+                      )
+                      )
+                    ) 
                   ) : (
                     VehicleAssets?.map((el) => (
                       <tr key={el.id} className="border-b hover:bg-gray-100">
-                        <td className="px-1 text-center py-2">{el.parentAssetId || ''}</td>
+                          <td className="px-1 text-center py-2">test</td>
+                        {/* <td className="px-1 text-center py-2">{el.parentAssetId || ''}</td>
                         <td className="px-1 text-center py-2">{el.RegistrationNumber || ''}</td>
                         <td className="px-1 text-center py-2">{el.EngineNumber || ''}</td>
                         <td className="px-1 text-center py-2">{el.ChassisNumber || ''}</td>
@@ -707,7 +716,7 @@ export default function AssetMasterForm() {
                         <td className="px-1 text-center py-2">{el.Manufacturer || ''}</td>
                         <td className="px-1 text-center py-2">{el.Year || ''}</td>
                         <td className="px-1 text-center py-2">{el.Color || ''}</td>
-                        <td className="px-1 text-center py-2">{el.FuelType || ''}</td>
+                        <td className="px-1 text-center py-2">{el.FuelType || ''}</td> */}
                       </tr>
                     ))
                   )}
